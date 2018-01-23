@@ -1,31 +1,21 @@
-print("===================================================")
-print("<<start log>>")
-print(substr(Sys.time(),1,19))
 library(Rblpapi)
 library(RMySQL)
 
 con<-blpConnect()
 bldb = dbConnect(MySQL(), user='', password='', dbname='', host='')
-query<-dbGetQuery(bldb, "SELECT id_tickers, securities, fields FROM tickers")
+query<-dbGetQuery(bldb, "SELECT id_tickers, securities, fields, table_name, last_update FROM tickers")
 dbDisconnect(bldb)
 
-bldb = dbConnect(MySQL(), user='', password='', dbname='', host='')
-id_exists<-dbGetQuery(bldb, "SELECT id_tickers FROM px_update")
-dbDisconnect(bldb)
-
-print("===================================================")
 for(i in 1:nrow(query)) {
-  row<-query[i,1:3]
+  row<-query[i,1:5]
   id_tickers<-row[[1]]
-  
-  bldb = dbConnect(MySQL(), user='', password='', dbname='', host='')
-  qqq<-paste("SELECT last_update FROM px_update WHERE id_tickers=",id_tickers, sep="")
-  last_update<-dbGetQuery(bldb, qqq)
-  last_update<-gsub("-","",last_update)
-  dbDisconnect(bldb)
-  
   securities<-row[[2]]
   fields<-row[[3]]
+  table_name<-row[[4]]
+  last_update<-gsub("-","",row[[5]])
+  
+  
+  
   tick<-paste(securities, fields)
   securities<-gsub(" ","_",securities)
   lsecurities<-tolower(securities)
@@ -52,14 +42,9 @@ for(i in 1:nrow(query)) {
 if (haha!="NA") {
   
   bldbi = dbConnect(MySQL(), user='', password='', dbname='', host='')
-  if (!(id_tickers %in% id_exists$id_tickers)) {
-    queryi <- paste("INSERT INTO px_update (id_tickers, timestamp, px_last, last_update) VALUES (", id_tickers,",",tanggaljam,",",px_last,",",tanggal,")", sep="")
-    dbGetQuery(bldbi, queryi)
-  }else{
-    queryi <- paste("UPDATE px_update SET timestamp=",tanggaljam,", px_last=",px_last,", last_update=",tanggal," WHERE id_tickers=",id_tickers, sep="")
-    dbGetQuery(bldbi, queryi)
-  }
-  
+  queryi <- paste("UPDATE tickers SET last_update=",tanggaljam," WHERE id_tickers=",id_tickers, sep="")
+  dbGetQuery(bldbi, queryi)
+ 
   bldbb = dbConnect(MySQL(), user='', password='', dbname='', host='')
   quehehe <- paste("SELECT tanggal FROM" ,lsecurities, "ORDER BY tanggal DESC LIMIT 1")
   lupdate<-dbGetQuery(bldbb, quehehe)
@@ -80,6 +65,3 @@ if (haha!="NA") {
   print(asd)
 }
 }
-print("NKRI AMAN TERKENDALI")
-print("<<end log>>")
-Sys.sleep(7)
