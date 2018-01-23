@@ -7,7 +7,7 @@ query<-dbGetQuery(bldb, "SELECT id_tickers, securities, fields, table_name, last
 dbDisconnect(bldb)
 
 for(i in 1:nrow(query)) {
-  row<-query[i,1:3]
+  row<-query[i,1:5]
   id_tickers<-row[[1]]
   securities<-row[[2]]
   fields<-row[[3]]
