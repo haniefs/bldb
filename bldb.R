@@ -23,18 +23,18 @@ for(i in 1:nrow(query)) {
   bldata = bdh(tick, "PX_LAST", as.Date(start.date),  options = c("nonTradingDayFillOption"="ALL_CALENDAR_DAYS"))
   bldata = bldata[order(as.Date(bldata$date, format="%Y-%m-%d"), decreasing = TRUE),]
   
-  //add for loop 
+  #add for loop?
   
-  tanggal <- bldata[[1,1]]								    # ambil tanggal dari bldata [[1,1]] biar output ga vector. gila nih R rempong
-  tahun <- substr(tanggal,1,4)							  # rapihin format tanggal biar ga ditolak mysql
-  bulan <- substr(tanggal,6,7)							  # sama kaya atas
-  hari <- substr(tanggal,9,10)							  # masih sama kaya atas
+  tanggal <- bldata[[1,1]]                    # ambil tanggal dari bldata [[1,1]] biar output ga vector. gila nih R rempong
+  tahun <- substr(tanggal,1,4)                # rapihin format tanggal biar ga ditolak mysql
+  bulan <- substr(tanggal,6,7)                # sama kaya atas
+  hari <- substr(tanggal,9,10)                # masih sama kaya atas
   time <- substr(Sys.time(),12,19)            # sumpah masih sama kaya yang atas!!!!!
   tanggal <- paste(tahun,bulan,hari, sep="")  # ilangin spasi dari var tanggal biar diterima mysql dengan lapang dada
   tanggaljam <- paste(tanggal,time)           # bikin timestamp buat update jam-jaman. hehe jam-jaman. kaya apa gitu LOL
   tanggaljam <- gsub(":","",tanggaljam)       # ilangin : dari format jam
   tanggaljam <- gsub(" ","",tanggaljam)       # ilangin spasi dari format jam biar ga ditolak mysql :*
-  px_last <- bldata[[2]]								      # ambil nilai px_last
+  px_last <- bldata[[2]]                      # ambil nilai px_last
   
   
 
@@ -47,10 +47,10 @@ if (haha!="NA") {
   queryi <- paste("UPDATE tickers SET last_update=",tanggaljam," WHERE id_tickers=",id_tickers, sep="")
   dbGetQuery(bldbi, queryi)
  
-  //change these lines of codes incorporating UPDATE ON DUPLICATE sql statement???
-  //less query
-  //easier to read
-  //use UPDATE ON DUPLICATE with every INSERT query
+  #change these lines of codes incorporating UPDATE ON DUPLICATE sql statement???
+  #less query
+  #easier to read
+  #use UPDATE ON DUPLICATE with every INSERT query
   
   bldbb = dbConnect(MySQL(), user='', password='', dbname='', host='')
   quehehe <- paste("SELECT tanggal FROM" ,lsecurities, "ORDER BY tanggal DESC LIMIT 1")
