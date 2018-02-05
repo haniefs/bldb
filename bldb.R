@@ -23,6 +23,8 @@ for(i in 1:nrow(query)) {
   bldata = bdh(tick, "PX_LAST", as.Date(start.date),  options = c("nonTradingDayFillOption"="ALL_CALENDAR_DAYS"))
   bldata = bldata[order(as.Date(bldata$date, format="%Y-%m-%d"), decreasing = TRUE),]
   
+  //add for loop 
+  
   tanggal <- bldata[[1,1]]								    # ambil tanggal dari bldata [[1,1]] biar output ga vector. gila nih R rempong
   tahun <- substr(tanggal,1,4)							  # rapihin format tanggal biar ga ditolak mysql
   bulan <- substr(tanggal,6,7)							  # sama kaya atas
@@ -45,6 +47,11 @@ if (haha!="NA") {
   queryi <- paste("UPDATE tickers SET last_update=",tanggaljam," WHERE id_tickers=",id_tickers, sep="")
   dbGetQuery(bldbi, queryi)
  
+  //change these lines of codes incorporating UPDATE ON DUPLICATE sql statement???
+  //less query
+  //easier to read
+  //use UPDATE ON DUPLICATE with every INSERT query
+  
   bldbb = dbConnect(MySQL(), user='', password='', dbname='', host='')
   quehehe <- paste("SELECT tanggal FROM" ,lsecurities, "ORDER BY tanggal DESC LIMIT 1")
   lupdate<-dbGetQuery(bldbb, quehehe)
